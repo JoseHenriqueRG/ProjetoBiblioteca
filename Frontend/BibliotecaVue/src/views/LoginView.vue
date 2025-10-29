@@ -42,7 +42,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue';
+import { defineComponent, ref, inject } from 'vue';
 import axios from 'axios';
 import { useRouter } from 'vue-router';
 
@@ -54,6 +54,7 @@ export default defineComponent({
     const emailError = ref('');
     const passwordError = ref('');
     const router = useRouter();
+    const updateToken = inject('updateToken') as (token: string | null) => void;
 
     const validateForm = () => {
       let isValid = true;
@@ -85,9 +86,12 @@ export default defineComponent({
           email: email.value,
           senha: password.value,
         });
-        localStorage.setItem('token', response.data.token);
+        if (updateToken) {
+          updateToken(response.data.token);
+        }
         router.push('/dashboard');
       } catch (error) {
+        console.log(error);
         alert('Email ou senha inválidos.');
       }
     };

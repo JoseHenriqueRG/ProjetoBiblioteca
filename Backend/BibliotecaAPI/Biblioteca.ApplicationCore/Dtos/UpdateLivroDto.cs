@@ -11,6 +11,8 @@ namespace Biblioteca.ApplicationCore.Dtos
         [Required]
         public string ISBN { get; set; } = string.Empty;
         public string Editora { get; set; } = string.Empty;
+        [Range(1000, 9999)]
+        public int AnoPublicacao { get; set; }
         [Range(1, int.MaxValue)]
         public int Quantidade { get; set; }
     }

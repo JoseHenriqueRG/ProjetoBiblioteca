@@ -1,13 +1,39 @@
 <script setup lang="ts">
 import { RouterLink, RouterView, useRouter } from 'vue-router'
-import { computed } from 'vue'
+import { computed, ref, provide, onMounted, onUnmounted } from 'vue'
 
 const router = useRouter()
+const token = ref(localStorage.getItem('token'))
 
-const isLoggedIn = computed(() => !!localStorage.getItem('token'))
+const isLoggedIn = computed(() => !!token.value)
+
+const updateToken = (newToken: string | null) => {
+  token.value = newToken
+  if (newToken) {
+    localStorage.setItem('token', newToken)
+  } else {
+    localStorage.removeItem('token')
+  }
+}
+
+provide('updateToken', updateToken)
+
+const handleStorageChange = (event: StorageEvent) => {
+  if (event.key === 'token') {
+    token.value = event.newValue
+  }
+}
+
+onMounted(() => {
+  window.addEventListener('storage', handleStorageChange)
+})
+
+onUnmounted(() => {
+  window.removeEventListener('storage', handleStorageChange)
+})
 
 const logout = () => {
-  localStorage.removeItem('token')
+  updateToken(null)
   router.push('/login')
 }
 </script>
@@ -33,9 +59,9 @@ const logout = () => {
             <RouterLink class="nav-link" to="/dashboard">Dashboard</RouterLink>
           </li>
           <li class="nav-item" v-if="isLoggedIn">
-            <RouterLink class="nav-link" to="/books/add">Cadastrar Livro</RouterLink>
+            <RouterLink class="nav-link" to="/books">Gerenciar Livros</RouterLink>
           </li>
-          <li class="nav-item" v-if="!isLoggedIn">
+          <li class="nav-item" v-if="isLoggedIn">
             <RouterLink class="nav-link" to="/register">Cadastrar Usuário</RouterLink>
           </li>
           <li class="nav-item" v-if="!isLoggedIn">

@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.OpenApi.Models; // Added
+using Biblioteca.Infrastructure.Data; // Added for SeedData
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -64,6 +65,17 @@ builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<ILocacaoRepository, LocacaoRepository>();
 builder.Services.AddScoped<ILocacaoService, LocacaoService>();
 
+//builder.Services.AddCors(options =>
+//{
+//    options.AddPolicy("AllowVueApp",
+//        builder =>
+//        {
+//            builder.WithOrigins("http://localhost:5173")
+//                   .AllowAnyHeader()
+//                   .AllowAnyMethod();
+//        });
+//});
+
 builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddSwaggerGen(option =>
@@ -96,6 +108,21 @@ builder.Services.AddSwaggerGen(option =>
 
 var app = builder.Build();
 
+// Seed the database
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    try
+    {
+        await SeedData.Initialize(services);
+    }
+    catch (Exception ex)
+    {
+        var logger = services.GetRequiredService<ILogger<Program>>();
+        logger.LogError(ex, "An error occurred seeding the DB.");
+    }
+}
+
 // Apply migrations on startup
 using (var scope = app.Services.CreateScope())
 {
@@ -111,6 +138,8 @@ if (app.Environment.IsDevelopment())
 }
 
 // app.UseHttpsRedirection();
+
+//app.UseCors("AllowVueApp");
 
 app.UseAuthentication();
 app.UseAuthorization();

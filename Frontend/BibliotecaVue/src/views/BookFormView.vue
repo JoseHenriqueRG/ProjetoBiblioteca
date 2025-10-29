@@ -3,7 +3,7 @@
     <div class="row justify-content-center">
       <div class="col-md-8">
         <div class="card">
-          <div class="card-header">Cadastro de Livro</div>
+          <div class="card-header">{{ isEditMode ? 'Editar Livro' : 'Cadastro de Livro' }}</div>
           <div class="card-body">
             <form @submit.prevent="handleBookSubmit" novalidate>
               <div class="mb-3">
@@ -13,7 +13,7 @@
                   class="form-control"
                   :class="{ 'is-invalid': titleError }"
                   id="title"
-                  v-model="title"
+                  v-model="livro.titulo"
                   required
                   @input="titleError = ''"
                 />
@@ -26,7 +26,7 @@
                   class="form-control"
                   :class="{ 'is-invalid': authorError }"
                   id="author"
-                  v-model="author"
+                  v-model="livro.autor"
                   required
                   @input="authorError = ''"
                 />
@@ -39,33 +39,11 @@
                   class="form-control"
                   :class="{ 'is-invalid': isbnError }"
                   id="isbn"
-                  v-model="isbn"
+                  v-model="livro.isbn"
                   required
                   @input="isbnError = ''"
                 />
                 <div class="invalid-feedback">{{ isbnError }}</div>
-              </div>
-              <div class="mb-3">
-                <label for="publicationYear" class="form-label">Ano de Publicação</label>
-                <input
-                  type="number"
-                  class="form-control"
-                  :class="{ 'is-invalid': publicationYearError }"
-                  id="publicationYear"
-                  v-model="publicationYear"
-                  required
-                  @input="publicationYearError = ''"
-                />
-                <div class="invalid-feedback">{{ publicationYearError }}</div>
-              </div>
-              <div class="mb-3">
-                <label for="genre" class="form-label">Gênero</label>
-                <input
-                  type="text"
-                  class="form-control"
-                  id="genre"
-                  v-model="genre"
-                />
               </div>
               <div class="mb-3">
                 <label for="editora" class="form-label">Editora</label>
@@ -73,7 +51,16 @@
                   type="text"
                   class="form-control"
                   id="editora"
-                  v-model="editora"
+                  v-model="livro.editora"
+                />
+              </div>
+              <div class="mb-3">
+                <label for="anoPublicacao" class="form-label">Ano de Publicação</label>
+                <input
+                  type="number"
+                  class="form-control"
+                  id="anoPublicacao"
+                  v-model.number="livro.anoPublicacao"
                 />
               </div>
               <div class="mb-3">
@@ -82,11 +69,11 @@
                   type="number"
                   class="form-control"
                   id="quantidade"
-                  v-model="quantidade"
+                  v-model.number="livro.quantidade"
                   required
                 />
               </div>
-              <button type="submit" class="btn btn-primary">Salvar Livro</button>
+              <button type="submit" class="btn btn-primary">{{ isEditMode ? 'Salvar Alterações' : 'Cadastrar Livro' }}</button>
             </form>
           </div>
         </div>
@@ -96,54 +83,75 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue';
+import { defineComponent, ref, onMounted, computed } from 'vue';
 import axios from 'axios';
-import { useRouter } from 'vue-router';
+import { useRouter, useRoute } from 'vue-router';
+
+interface Livro {
+  id: number | null;
+  titulo: string;
+  autor: string;
+  editora: string;
+  anoPublicacao: number | null;
+  isbn: string;
+  quantidade: number | null;
+}
 
 export default defineComponent({
   name: 'BookFormView',
   setup() {
-    const title = ref('');
-    const author = ref('');
-    const isbn = ref('');
-    const publicationYear = ref<number | null>(null);
-    const genre = ref('');
-    const editora = ref('');
-    const quantidade = ref<number | null>(null);
+    const livro = ref<Livro>({ 
+        id: null,
+        titulo: '', 
+        autor: '', 
+        editora: '', 
+        anoPublicacao: null, 
+        isbn: '', 
+        quantidade: null 
+    });
 
     const titleError = ref('');
     const authorError = ref('');
     const isbnError = ref('');
-    const publicationYearError = ref('');
     const router = useRouter();
+    const route = useRoute();
+
+    const isEditMode = computed(() => !!route.params.id);
+
+    onMounted(async () => {
+      if (isEditMode.value) {
+        try {
+          const token = localStorage.getItem('token');
+          const response = await axios.get(`/api/livros/${route.params.id}`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          });
+          livro.value = response.data;
+        } catch (error) {
+          console.error('Erro ao buscar dados do livro:', error);
+          alert('Não foi possível carregar os dados do livro para edição.');
+        }
+      }
+    });
 
     const validateForm = () => {
       let isValid = true;
       titleError.value = '';
       authorError.value = '';
       isbnError.value = '';
-      publicationYearError.value = '';
 
-      if (!title.value) {
+      if (!livro.value.titulo) {
         titleError.value = 'O título é obrigatório.';
         isValid = false;
       }
 
-      if (!author.value) {
+      if (!livro.value.autor) {
         authorError.value = 'O autor é obrigatório.';
         isValid = false;
       }
 
-      if (!isbn.value) {
+      if (!livro.value.isbn) {
         isbnError.value = 'O ISBN é obrigatório.';
-        isValid = false;
-      }
-
-      if (!publicationYear.value) {
-        publicationYearError.value = 'O ano de publicação é obrigatório.';
-        isValid = false;
-      } else if (isNaN(publicationYear.value) || publicationYear.value < 1000 || publicationYear.value > new Date().getFullYear()) {
-        publicationYearError.value = 'Por favor, insira um ano de publicação válido.';
         isValid = false;
       }
 
@@ -156,39 +164,33 @@ export default defineComponent({
       }
       try {
         const token = localStorage.getItem('token');
-        await axios.post(
-          '/api/livros',
-          {
-            titulo: title.value,
-            autor: author.value,
-            isbn: isbn.value,
-            editora: editora.value,
-            quantidade: quantidade.value,
-          },
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-        router.push('/dashboard');
+        const headers = { Authorization: `Bearer ${token}` };
+        const bookData = {
+            titulo: livro.value.titulo,
+            autor: livro.value.autor,
+            editora: livro.value.editora,
+            isbn: livro.value.isbn,
+            anoPublicacao: livro.value.anoPublicacao,
+            quantidade: livro.value.quantidade,
+        };
+
+        if (isEditMode.value) {
+          await axios.put(`/api/livros/${route.params.id}`, bookData, { headers });
+        } else {
+          await axios.post('/api/livros', bookData, { headers });
+        }
+        router.push('/books');
       } catch (error) {
-        alert('Erro ao cadastrar livro. Verifique os dados e tente novamente.');
+        alert(`Erro ao ${isEditMode.value ? 'atualizar' : 'cadastrar'} livro. Verifique os dados e tente novamente.`);
       }
     };
 
     return {
-      title,
-      author,
-      isbn,
-      publicationYear,
-      genre,
-      editora,
-      quantidade,
+      livro,
+      isEditMode,
       titleError,
       authorError,
       isbnError,
-      publicationYearError,
       handleBookSubmit,
     };
   },

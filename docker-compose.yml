@@ -15,9 +15,11 @@ services:
   frontend:
     build:
       context: ./Frontend/BibliotecaVue
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.dev
     ports:
       - "8080:80"
+    environment:
+      - VITE_API_URL=http://backend:8080
     depends_on:
       - backend
 
