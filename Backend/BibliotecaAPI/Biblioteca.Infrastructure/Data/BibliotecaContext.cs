@@ -1,7 +1,9 @@
-using Biblioteca.Domain.Models;
+﻿using Biblioteca.Domain.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Biblioteca.Infrastructure.Data
 {
@@ -18,6 +20,12 @@ namespace Biblioteca.Infrastructure.Data
         {
             base.OnModelCreating(builder);
 
+            var converter = new ValueConverter<DateTimeOffset, DateTimeOffset>(
+                v => v.ToUniversalTime(),
+                v => v.ToUniversalTime()
+            );
+
+
             builder.Entity<Locacao>()
                 .HasOne(l => l.Livro)
                 .WithMany()
@@ -27,6 +35,21 @@ namespace Biblioteca.Infrastructure.Data
                 .HasOne(l => l.Usuario)
                 .WithMany()
                 .HasForeignKey(l => l.UsuarioId);
+
+            builder.Entity<Locacao>()
+                .Property(l => l.DataRetirada)
+                .HasConversion(converter)
+                .HasColumnType("timestamp with time zone");
+
+            builder.Entity<Locacao>()
+                .Property(l => l.DataDevolucaoPrevista)
+                .HasConversion(converter)
+                .HasColumnType("timestamp with time zone");
+
+            builder.Entity<Locacao>()
+                .Property(l => l.DataDevolucaoReal)
+                .HasConversion(converter)
+                .HasColumnType("timestamp with time zone");
         }
     }
 }

@@ -62,7 +62,7 @@ namespace Biblioteca.ApplicationCore.Services
                 DataRetirada = locacao.DataRetirada,
                 DataDevolucaoPrevista = locacao.DataDevolucaoPrevista,
                 DataDevolucaoReal = locacao.DataDevolucaoReal,
-                Status = locacao.Status
+                Status = locacao.Status.ToString()
             };
         }
 
@@ -113,7 +113,7 @@ namespace Biblioteca.ApplicationCore.Services
                 DataRetirada = l.DataRetirada,
                 DataDevolucaoPrevista = l.DataDevolucaoPrevista,
                 DataDevolucaoReal = l.DataDevolucaoReal,
-                Status = l.Status
+                Status = l.Status.ToString()
             });
         }
 
@@ -132,7 +132,7 @@ namespace Biblioteca.ApplicationCore.Services
                 DataRetirada = locacao.DataRetirada,
                 DataDevolucaoPrevista = locacao.DataDevolucaoPrevista,
                 DataDevolucaoReal = locacao.DataDevolucaoReal,
-                Status = locacao.Status
+                Status = locacao.Status.ToString()
             };
         }
 
@@ -149,7 +149,7 @@ namespace Biblioteca.ApplicationCore.Services
                 DataRetirada = l.DataRetirada,
                 DataDevolucaoPrevista = l.DataDevolucaoPrevista,
                 DataDevolucaoReal = l.DataDevolucaoReal,
-                Status = l.Status
+                Status = l.Status.ToString()
             });
         }
 

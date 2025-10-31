@@ -11,15 +11,6 @@ using System.Threading.Tasks;
 
 namespace Biblioteca.ApplicationCore.Services
 {
-    /// <summary>
-    /// A estratégia é usar as classes UserManager<Usuario> e RoleManager<IdentityRole<int>> injetadas diretamente
-    /// no UsuarioService.O UserManager já atua como uma camada de repositório para o modelo Usuario, abstraindo 
-    /// todo o acesso a dados (criação, busca, atualização, exclusão, gerenciamento de senhas, etc.). 
-    /// 
-    /// Criar um UsuarioRepository em cima do UserManager seria, em grande parte, apenas um invólucro redundante, 
-    /// adicionando uma camada extra de código sem um benefício claro, já que o UserManager é a forma padrão e 
-    /// recomendada para gerenciar usuários com o Identity.
-    /// </summary>
     public class UsuarioService : IUsuarioService
     {
         private readonly UserManager<Usuario> _userManager;
@@ -48,7 +39,7 @@ namespace Biblioteca.ApplicationCore.Services
 
             if (!result.Succeeded)
             {
-                throw new System.Exception("Falha ao criar o usuário.");
+                throw new System.Exception("Falha ao criar o usuÃ¡rio.");
             }
 
             await AddToRole(createUserDto.Tipo, user);
@@ -78,7 +69,7 @@ namespace Biblioteca.ApplicationCore.Services
             return new UsuarioDto { Id = user.Id, Nome = user.Nome ?? "", Email = user.Email ?? "", Telefone = user.PhoneNumber ?? "", Tipo = user.Tipo ?? "" };
         }
 
-        public async Task<(bool, TokenDto?)> LoginAsync(LoginDto loginDto)
+        public async Task<(bool, LoginResponseDto?)> LoginAsync(LoginDto loginDto)
         {
             var user = await _userManager.FindByEmailAsync(loginDto.Email);
             if (user == null || !await _userManager.CheckPasswordAsync(user, loginDto.Senha))
@@ -87,7 +78,10 @@ namespace Biblioteca.ApplicationCore.Services
             }
 
             var token = await _tokenService.GenerateToken(user);
-            return (true, new TokenDto { Token = token });
+            var userDto = new UsuarioDto { Id = user.Id, Nome = user.Nome ?? "", Email = user.Email ?? "", Telefone = user.PhoneNumber ?? "", Tipo = user.Tipo ?? "" };
+            var loginResponse = new LoginResponseDto { Token = token, User = userDto };
+
+            return (true, loginResponse);
         }
 
         public async Task<UsuarioDto> UpdateUserAsync(int id, UpdateUsuarioDto updateUserDto)
@@ -95,7 +89,7 @@ namespace Biblioteca.ApplicationCore.Services
             var user = await _userManager.FindByIdAsync(id.ToString());
             if (user == null)
             {
-                throw new System.Exception("Usuário não encontrado.");
+                throw new System.Exception("UsuÃ¡rio nÃ£o encontrado.");
             }
 
             user.Nome = updateUserDto.Nome;
@@ -117,7 +111,7 @@ namespace Biblioteca.ApplicationCore.Services
 
             if (!result.Succeeded)
             { 
-                throw new System.Exception("Falha ao atualizar o usuário.");
+                throw new System.Exception("Falha ao atualizar o usuÃ¡rio.");
             }
 
             return new UsuarioDto { Id = user.Id, Nome = user.Nome ?? "", Email = user.Email ?? "", Telefone = user.PhoneNumber ?? "", Tipo = user.Tipo ?? "" };

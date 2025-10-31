@@ -10,8 +10,8 @@ namespace Biblioteca.ApplicationCore.Dtos
         [Required]
         public int UsuarioId { get; set; }
         [Required]
-        public DateTime DataRetirada { get; set; }
+        public DateTimeOffset DataRetirada { get; set; }
         [Required]
-        public DateTime DataDevolucaoPrevista { get; set; }
+        public DateTimeOffset DataDevolucaoPrevista { get; set; }
     }
 }

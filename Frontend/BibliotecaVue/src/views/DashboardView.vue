@@ -14,7 +14,6 @@
               <th>Título</th>
               <th>Autor</th>
               <th>ISBN</th>
-              <th>Ações</th>
             </tr>
           </thead>
           <tbody>
@@ -22,9 +21,6 @@
               <td>{{ livro.titulo }}</td>
               <td>{{ livro.autor }}</td>
               <td>{{ livro.isbn }}</td>
-              <td>
-                <button class="btn btn-sm btn-primary">Emprestar</button>
-              </td>
             </tr>
           </tbody>
         </table>
@@ -35,29 +31,17 @@
 
 <script lang="ts">
 import { defineComponent, ref, onMounted } from 'vue';
-import axios from 'axios';
-
-interface Livro {
-  id: number;
-  titulo: string;
-  autor: string;
-  isbn: string;
-}
+import { getLivros } from '@/services/book';
+import type { LivroDto } from '@/types';
 
 export default defineComponent({
   name: 'DashboardView',
   setup() {
-    const livros = ref<Livro[]>([]);
+    const livros = ref<LivroDto[]>([]);
 
     const fetchLivros = async () => {
       try {
-        const token = localStorage.getItem('token');
-        const response = await axios.get('/api/livros', {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        livros.value = response.data;
+        livros.value = await getLivros();
       } catch (error) {
         console.error('Erro ao buscar livros:', error);
       }

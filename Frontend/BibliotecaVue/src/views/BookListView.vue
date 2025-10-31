@@ -47,33 +47,18 @@
 
 <script lang="ts">
 import { defineComponent, ref, onMounted } from 'vue';
-import axios from 'axios';
-import { useRouter } from 'vue-router';
-
-interface Livro {
-  id: number;
-  titulo: string;
-  autor: string;
-  editora: string;
-  anoPublicacao: number;
-  isbn: string;
-  quantidade: number;
-}
+import { getLivros, searchBooks, deleteBook } from '@/services/book';
+import type { LivroDto } from '@/types';
 
 export default defineComponent({
   name: 'BookListView',
   setup() {
-    const livros = ref<Livro[]>([]);
+    const livros = ref<LivroDto[]>([]);
     const searchQuery = ref('');
-    const router = useRouter();
 
     const fetchLivros = async () => {
       try {
-        const token = localStorage.getItem('token');
-        const response = await axios.get('/api/livros', {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        livros.value = response.data;
+        livros.value = await getLivros();
       } catch (error) {
         console.error('Erro ao buscar livros:', error);
       }
@@ -81,12 +66,11 @@ export default defineComponent({
 
     const handleSearch = async () => {
       try {
-        const token = localStorage.getItem('token');
-        const response = await axios.get(`/api/livros/search?query=${searchQuery.value}`,
-         {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        livros.value = response.data;
+        if (searchQuery.value) {
+          livros.value = await searchBooks(searchQuery.value);
+        } else {
+          fetchLivros();
+        }
       } catch (error) {
         console.error('Erro ao pesquisar livros:', error);
       }
@@ -95,10 +79,7 @@ export default defineComponent({
     const deleteLivro = async (id: number) => {
       if (confirm('Tem certeza que deseja excluir este livro?')) {
         try {
-          const token = localStorage.getItem('token');
-          await axios.delete(`/api/livros/${id}`, {
-            headers: { Authorization: `Bearer ${token}` },
-          });
+          await deleteBook(id);
           fetchLivros(); // Refresh the list
         } catch (error) {
           console.error('Erro ao excluir livro:', error);

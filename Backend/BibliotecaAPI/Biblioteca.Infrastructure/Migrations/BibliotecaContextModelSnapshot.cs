@@ -30,6 +30,9 @@ namespace Biblioteca.Infrastructure.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
+                    b.Property<int>("AnoPublicacao")
+                        .HasColumnType("integer");
+
                     b.Property<string>("Autor")
                         .IsRequired()
                         .HasColumnType("text");
@@ -62,13 +65,13 @@ namespace Biblioteca.Infrastructure.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime>("DataDevolucaoPrevista")
+                    b.Property<DateTimeOffset>("DataDevolucaoPrevista")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<DateTime?>("DataDevolucaoReal")
+                    b.Property<DateTimeOffset?>("DataDevolucaoReal")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<DateTime>("DataRetirada")
+                    b.Property<DateTimeOffset>("DataRetirada")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<int>("LivroId")

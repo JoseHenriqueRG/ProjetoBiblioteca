@@ -19,12 +19,12 @@ namespace Biblioteca.WebApi.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login(LoginDto loginDto)
         {
-            var (success, token) = await _usuarioService.LoginAsync(loginDto);
+            var (success, loginResponse) = await _usuarioService.LoginAsync(loginDto);
             if (!success)
             {
                 return Unauthorized();
             }
-            return Ok(token);
+            return Ok(loginResponse);
         }
     }
 }

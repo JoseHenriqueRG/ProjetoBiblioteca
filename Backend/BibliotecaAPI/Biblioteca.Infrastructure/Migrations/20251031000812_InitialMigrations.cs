@@ -7,7 +7,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Biblioteca.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class InitialMigrations : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -65,6 +65,7 @@ namespace Biblioteca.Infrastructure.Migrations
                     Autor = table.Column<string>(type: "text", nullable: false),
                     ISBN = table.Column<string>(type: "text", nullable: false),
                     Editora = table.Column<string>(type: "text", nullable: false),
+                    AnoPublicacao = table.Column<int>(type: "integer", nullable: false),
                     Quantidade = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
@@ -186,9 +187,9 @@ namespace Biblioteca.Infrastructure.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     UsuarioId = table.Column<int>(type: "integer", nullable: false),
                     LivroId = table.Column<int>(type: "integer", nullable: false),
-                    DataRetirada = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    DataDevolucaoPrevista = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    DataDevolucaoReal = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    DataRetirada = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
+                    DataDevolucaoPrevista = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
+                    DataDevolucaoReal = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: true),
                     Status = table.Column<int>(type: "integer", nullable: false),
                     Multa = table.Column<decimal>(type: "numeric", nullable: false)
                 },

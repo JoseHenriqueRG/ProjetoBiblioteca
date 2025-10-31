@@ -70,8 +70,8 @@
               <div class="mb-3">
                 <label for="tipo" class="form-label">Tipo</label>
                 <select class="form-select" id="tipo" v-model="tipo">
-                  <option value="UsuarioPadrao">Usuário Padrão</option>
-                  <option value="Administrador">Administrador</option>
+                  <option value="padrão">Usuário Padrão</option>
+                  <option value="administrador">Administrador</option>
                 </select>
               </div>
               <button type="submit" class="btn btn-success">Cadastrar</button>
@@ -85,8 +85,9 @@
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
-import axios from 'axios';
 import { useRouter } from 'vue-router';
+import { useAuthStore } from '@/stores/auth';
+import type { CreateUsuarioDto } from '@/types';
 
 export default defineComponent({
   name: 'RegisterView',
@@ -96,12 +97,13 @@ export default defineComponent({
     const password = ref('');
     const confirmPassword = ref('');
     const telefone = ref('');
-    const tipo = ref('UsuarioPadrao');
+    const tipo = ref<'padrão' | 'administrador'>('padrão');
     const nameError = ref('');
     const emailError = ref('');
     const passwordError = ref('');
     const confirmPasswordError = ref('');
     const router = useRouter();
+    const authStore = useAuthStore();
 
     const validateForm = () => {
       let isValid = true;
@@ -147,24 +149,17 @@ export default defineComponent({
         return;
       }
       try {
-        const token = localStorage.getItem('token');
-        await axios.post(
-          '/api/usuarios',
-          {
-            nome: name.value,
-            email: email.value,
-            senha: password.value,
-            telefone: telefone.value,
-            tipo: tipo.value,
-          },
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
+        const registerDto: CreateUsuarioDto = {
+          nome: name.value,
+          email: email.value,
+          senha: password.value,
+          telefone: telefone.value,
+          tipo: tipo.value,
+        };
+        await authStore.register(registerDto);
         router.push('/login');
       } catch (error) {
+        console.error(error);
         alert('Erro ao cadastrar usuário. Verifique os dados e tente novamente.');
       }
     };

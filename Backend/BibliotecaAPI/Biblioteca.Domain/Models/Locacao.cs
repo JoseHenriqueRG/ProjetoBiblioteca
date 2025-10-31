@@ -15,9 +15,9 @@ namespace Biblioteca.Domain.Models
         public Usuario Usuario { get; set; } = null!;
         public int LivroId { get; set; }
         public Livro Livro { get; set; } = null!;
-        public DateTime DataRetirada { get; set; }
-        public DateTime DataDevolucaoPrevista { get; set; }
-        public DateTime? DataDevolucaoReal { get; set; }
+        public DateTimeOffset DataRetirada { get; set; }
+        public DateTimeOffset DataDevolucaoPrevista { get; set; }
+        public DateTimeOffset? DataDevolucaoReal { get; set; }
         public LocacaoStatus Status { get; set; }
         public decimal Multa { get; set; }
     }

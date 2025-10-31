@@ -7,9 +7,9 @@ namespace Biblioteca.ApplicationCore.Dtos
         public int LocacaoId { get; set; }
         public string LivroTitulo { get; set; } = string.Empty;
         public string UsuarioNome { get; set; } = string.Empty;
-        public DateTime DataRetirada { get; set; }
-        public DateTime DataDevolucaoPrevista { get; set; }
-        public DateTime? DataDevolucaoReal { get; set; }
+        public DateTimeOffset DataRetirada { get; set; }
+        public DateTimeOffset DataDevolucaoPrevista { get; set; }
+        public DateTimeOffset? DataDevolucaoReal { get; set; }
         public decimal Multa { get; set; }
     }
 }

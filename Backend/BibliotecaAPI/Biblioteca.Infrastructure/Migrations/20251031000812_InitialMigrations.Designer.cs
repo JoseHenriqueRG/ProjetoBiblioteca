@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Biblioteca.Infrastructure.Migrations
 {
     [DbContext(typeof(BibliotecaContext))]
-    [Migration("20251028002546_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20251031000812_InitialMigrations")]
+    partial class InitialMigrations
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -32,6 +32,9 @@ namespace Biblioteca.Infrastructure.Migrations
                         .HasColumnType("integer");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("AnoPublicacao")
+                        .HasColumnType("integer");
 
                     b.Property<string>("Autor")
                         .IsRequired()
@@ -65,13 +68,13 @@ namespace Biblioteca.Infrastructure.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime>("DataDevolucaoPrevista")
+                    b.Property<DateTimeOffset>("DataDevolucaoPrevista")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<DateTime?>("DataDevolucaoReal")
+                    b.Property<DateTimeOffset?>("DataDevolucaoReal")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<DateTime>("DataRetirada")
+                    b.Property<DateTimeOffset>("DataRetirada")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<int>("LivroId")

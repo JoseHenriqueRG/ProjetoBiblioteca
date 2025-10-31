@@ -42,9 +42,9 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, inject } from 'vue';
-import axios from 'axios';
+import { defineComponent, ref } from 'vue';
 import { useRouter } from 'vue-router';
+import { useAuthStore } from '@/stores/auth';
 
 export default defineComponent({
   name: 'LoginView',
@@ -54,7 +54,7 @@ export default defineComponent({
     const emailError = ref('');
     const passwordError = ref('');
     const router = useRouter();
-    const updateToken = inject('updateToken') as (token: string | null) => void;
+    const authStore = useAuthStore();
 
     const validateForm = () => {
       let isValid = true;
@@ -82,13 +82,7 @@ export default defineComponent({
         return;
       }
       try {
-        const response = await axios.post('/api/auth/login', {
-          email: email.value,
-          senha: password.value,
-        });
-        if (updateToken) {
-          updateToken(response.data.token);
-        }
+        await authStore.login({ email: email.value, senha: password.value });
         router.push('/dashboard');
       } catch (error) {
         console.log(error);

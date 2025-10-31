@@ -84,24 +84,15 @@
 
 <script lang="ts">
 import { defineComponent, ref, onMounted, computed } from 'vue';
-import axios from 'axios';
 import { useRouter, useRoute } from 'vue-router';
-
-interface Livro {
-  id: number | null;
-  titulo: string;
-  autor: string;
-  editora: string;
-  anoPublicacao: number | null;
-  isbn: string;
-  quantidade: number | null;
-}
+import { getBookById, createBook, updateBook } from '@/services/book';
+import type { LivroDto, CreateLivroDto, UpdateLivroDto } from '@/types';
 
 export default defineComponent({
   name: 'BookFormView',
   setup() {
-    const livro = ref<Livro>({ 
-        id: null,
+    const livro = ref<LivroDto>({ 
+        id: 0,
         titulo: '', 
         autor: '', 
         editora: '', 
@@ -121,12 +112,8 @@ export default defineComponent({
     onMounted(async () => {
       if (isEditMode.value) {
         try {
-          const token = localStorage.getItem('token');
-          const response = await axios.get(`/api/livros/${route.params.id}`,
-          {
-            headers: { Authorization: `Bearer ${token}` },
-          });
-          livro.value = response.data;
+          const bookId = Number(route.params.id);
+          livro.value = await getBookById(bookId);
         } catch (error) {
           console.error('Erro ao buscar dados do livro:', error);
           alert('Não foi possível carregar os dados do livro para edição.');
@@ -163,9 +150,7 @@ export default defineComponent({
         return;
       }
       try {
-        const token = localStorage.getItem('token');
-        const headers = { Authorization: `Bearer ${token}` };
-        const bookData = {
+        const bookData: CreateLivroDto | UpdateLivroDto = {
             titulo: livro.value.titulo,
             autor: livro.value.autor,
             editora: livro.value.editora,
@@ -175,9 +160,9 @@ export default defineComponent({
         };
 
         if (isEditMode.value) {
-          await axios.put(`/api/livros/${route.params.id}`, bookData, { headers });
+          await updateBook(Number(route.params.id), bookData as UpdateLivroDto);
         } else {
-          await axios.post('/api/livros', bookData, { headers });
+          await createBook(bookData as CreateLivroDto);
         }
         router.push('/books');
       } catch (error) {

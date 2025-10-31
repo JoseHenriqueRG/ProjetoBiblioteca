@@ -24,6 +24,7 @@ namespace Biblioteca.ApplicationCore.Services
                 Autor = createLivroDto.Autor,
                 ISBN = createLivroDto.ISBN,
                 Editora = createLivroDto.Editora,
+                AnoPublicacao = createLivroDto.AnoPublicacao,
                 Quantidade = createLivroDto.Quantidade
             };
 
@@ -36,13 +37,14 @@ namespace Biblioteca.ApplicationCore.Services
                 Autor = livro.Autor,
                 ISBN = livro.ISBN,
                 Editora = livro.Editora,
+                AnoPublicacao = livro.AnoPublicacao,
                 Quantidade = livro.Quantidade
             };
         }
 
         public async Task<IEnumerable<LivroDto>> GetAllAsync()
         {
-            var livros = await _livroRepository.GetAllAsync();
+            var livros = await _livroRepository.GetAllAsync() ?? [];
             return livros.Select(livro => new LivroDto
             {
                 Id = livro.Id,
@@ -50,6 +52,7 @@ namespace Biblioteca.ApplicationCore.Services
                 Autor = livro.Autor,
                 ISBN = livro.ISBN,
                 Editora = livro.Editora,
+                AnoPublicacao = livro.AnoPublicacao,
                 Quantidade = livro.Quantidade
             });
         }
@@ -66,6 +69,7 @@ namespace Biblioteca.ApplicationCore.Services
                 Autor = livro.Autor,
                 ISBN = livro.ISBN,
                 Editora = livro.Editora,
+                AnoPublicacao = livro.AnoPublicacao,
                 Quantidade = livro.Quantidade
             };
         }
@@ -80,6 +84,7 @@ namespace Biblioteca.ApplicationCore.Services
                 Autor = livro.Autor,
                 ISBN = livro.ISBN,
                 Editora = livro.Editora,
+                AnoPublicacao = livro.AnoPublicacao,
                 Quantidade = livro.Quantidade
             });
         }
@@ -97,6 +102,7 @@ namespace Biblioteca.ApplicationCore.Services
             livro.Autor = updateLivroDto.Autor;
             livro.ISBN = updateLivroDto.ISBN;
             livro.Editora = updateLivroDto.Editora;
+            livro.AnoPublicacao = updateLivroDto.AnoPublicacao;
             livro.Quantidade = updateLivroDto.Quantidade;
 
             await _livroRepository.UpdateAsync(livro);

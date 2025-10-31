@@ -10,9 +10,9 @@ namespace Biblioteca.ApplicationCore.Dtos
         public string LivroTitulo { get; set; } = string.Empty;
         public int UsuarioId { get; set; }
         public string UsuarioNome { get; set; } = string.Empty;
-        public DateTime DataRetirada { get; set; }
-        public DateTime DataDevolucaoPrevista { get; set; }
-        public DateTime? DataDevolucaoReal { get; set; }
-        public LocacaoStatus Status { get; set; }
+        public DateTimeOffset DataRetirada { get; set; }
+        public DateTimeOffset DataDevolucaoPrevista { get; set; }
+        public DateTimeOffset? DataDevolucaoReal { get; set; }
+        public string Status { get; set; }
     }
 }
