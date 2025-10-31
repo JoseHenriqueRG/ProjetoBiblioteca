@@ -10,6 +10,7 @@
           <th>Usuário</th>
           <th>Data da Retirada</th>
           <th>Data de Devolução</th>
+          <th>Multa</th>
           <th>Status</th>
           <th>Ações</th>
         </tr>
@@ -21,6 +22,7 @@
           <td>{{ rental.usuarioNome }}</td>
           <td>{{ new Date(rental.dataRetirada).toLocaleDateString() }}</td>
           <td>{{ new Date(rental.dataDevolucaoPrevista).toLocaleDateString() }}</td>
+          <td>{{ rental.multa ?? 0 }}</td>
           <td>{{ rental.status }}</td>
           <td>
             <button v-if="rental.status === 'Pendente'" @click="devolver(rental.id)" class="btn btn-primary btn-sm">Devolver</button>
@@ -56,7 +58,12 @@ export default defineComponent({
     const devolver = async (id: number) => {
       if (confirm('Confirmar devolução?')) {
         try {
-          await devolverLocacao(id);
+          const { multa } = await devolverLocacao(id);
+          if (multa > 0) {
+            alert(`Livro devolvido com sucesso. Multa: R$ ${multa}`);
+          } else {
+            alert('Livro devolvido com sucesso. Sem multa.');
+          }
           fetchRentals();
         } catch (error) {
           console.error(error);

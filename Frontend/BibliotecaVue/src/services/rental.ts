@@ -1,7 +1,7 @@
-import type { LocacaoDto, CreateLocacaoDto } from '@/types';
+import type { LocacaoDto, CreateLocacaoDto, DevolucaoDto } from '@/types';
 import { useAuthStore } from '@/stores/auth';
 
-const BASE_URL = 'https://localhost:44325/api/locacoes';
+const BASE_URL = '/api/locacoes';
 
 const getHeaders = () => {
     const authStore = useAuthStore();
@@ -26,12 +26,14 @@ export const createLocacao = async (locacao: CreateLocacaoDto): Promise<LocacaoD
         body: JSON.stringify(locacao),
     });
     if (!response.ok) {
-        throw new Error('Failed to create rental');
+        const data = await response.text();
+        const msg = data || 'Failed to create rental';
+        throw new Error(msg);
     }
     return response.json();
 };
 
-export const devolverLocacao = async (id: number): Promise<void> => {
+export const devolverLocacao = async (id: number): Promise<DevolucaoDto> => {
     const response = await fetch(`${BASE_URL}/${id}/devolver`, {
         method: 'PUT',
         headers: getHeaders(),
@@ -39,6 +41,8 @@ export const devolverLocacao = async (id: number): Promise<void> => {
     if (!response.ok) {
         throw new Error('Failed to return rental');
     }
+
+    return response.json();
 };
 
 export const renovarLocacao = async (id: number, diasParaRenovar: number): Promise<void> => {

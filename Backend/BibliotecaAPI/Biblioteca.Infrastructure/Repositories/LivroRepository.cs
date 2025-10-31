@@ -45,5 +45,12 @@ namespace Biblioteca.Infrastructure.Repositories
             _context.Entry(livro).State = EntityState.Modified;
             await _context.SaveChangesAsync();
         }
+
+        public async Task DeleteAsync(Livro livro)
+        {
+            _context.Remove(livro);
+            await _context.SaveChangesAsync();
+        }
+
     }
 }

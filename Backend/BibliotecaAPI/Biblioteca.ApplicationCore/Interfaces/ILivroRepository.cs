@@ -11,5 +11,6 @@ namespace Biblioteca.ApplicationCore.Interfaces
         Task AddAsync(Livro livro);
         Task UpdateAsync(Livro livro);
         Task<IEnumerable<Livro>> SearchAsync(string query);
+        Task DeleteAsync(Livro livro);
     }
 }

@@ -83,7 +83,7 @@ export default defineComponent({
       }
       try {
         await authStore.login({ email: email.value, senha: password.value });
-        router.push('/dashboard');
+        router.push('/books');
       } catch (error) {
         console.log(error);
         alert('Email ou senha inválidos.');

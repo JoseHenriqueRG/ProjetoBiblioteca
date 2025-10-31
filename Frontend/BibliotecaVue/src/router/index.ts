@@ -2,7 +2,6 @@ import { createRouter, createWebHistory } from 'vue-router'
 import LoginView from '../views/LoginView.vue'
 import RegisterView from '../views/RegisterView.vue'
 import BookFormView from '../views/BookFormView.vue'
-import DashboardView from '../views/DashboardView.vue'
 import BookListView from '../views/BookListView.vue'
 import ProfileView from '../views/ProfileView.vue'
 import RentalListView from '../views/RentalListView.vue'
@@ -46,12 +45,6 @@ const router = createRouter({
       meta: { requiresAuth: true, requiresAdmin: true }
     },
     {
-      path: '/dashboard',
-      name: 'dashboard',
-      component: DashboardView,
-      meta: { requiresAuth: true }
-    },
-    {
       path: '/profile',
       name: 'profile',
       component: ProfileView,
@@ -86,7 +79,7 @@ router.beforeEach((to, from, next) => {
   }
 
   if (to.meta.requiresAdmin && !authStore.isAdmin) {
-    return next({ name: 'dashboard' }) // Or some other unauthorized page
+    return next({ name: 'book-list' }) 
   }
 
   next()

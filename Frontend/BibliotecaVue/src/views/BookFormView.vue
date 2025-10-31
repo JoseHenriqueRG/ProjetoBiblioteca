@@ -166,6 +166,7 @@ export default defineComponent({
         }
         router.push('/books');
       } catch (error) {
+        console.error('Erro ao salvar livro:', error);
         alert(`Erro ao ${isEditMode.value ? 'atualizar' : 'cadastrar'} livro. Verifique os dados e tente novamente.`);
       }
     };

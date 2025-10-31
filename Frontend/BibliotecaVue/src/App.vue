@@ -14,7 +14,7 @@ const logout = () => {
 <template>
   <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="container-fluid">
-      <RouterLink class="navbar-brand" to="/dashboard">Biblioteca Vue</RouterLink>
+      <RouterLink class="navbar-brand" to="/books">Biblioteca Vue</RouterLink>
       <button
         class="navbar-toggler"
         type="button"
@@ -28,9 +28,6 @@ const logout = () => {
       </button>
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav">
-          <li class="nav-item" v-if="authStore.isAuthenticated">
-            <RouterLink class="nav-link" to="/dashboard">Dashboard</RouterLink>
-          </li>
           <li class="nav-item" v-if="authStore.isAuthenticated">
             <RouterLink class="nav-link" to="/books">Gerenciar Livros</RouterLink>
           </li>

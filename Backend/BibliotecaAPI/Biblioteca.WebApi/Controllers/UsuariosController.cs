@@ -19,6 +19,7 @@ namespace Biblioteca.WebApi.Controllers
         }
 
         [HttpPost]
+        [AllowAnonymous]
         public async Task<IActionResult> CreateUser(CreateUsuarioDto createUserDto)
         {
             var user = await _usuarioService.CreateUserAsync(createUserDto);

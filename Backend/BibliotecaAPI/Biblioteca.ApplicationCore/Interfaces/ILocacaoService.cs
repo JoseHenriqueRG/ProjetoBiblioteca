@@ -11,7 +11,7 @@ namespace Biblioteca.ApplicationCore.Interfaces
         Task<IEnumerable<LocacaoDto>> GetAllLocacoesAsync();
         Task<IEnumerable<LocacaoDto>> GetLocacoesByUserIdAsync(int userId);
         Task RenovarLocacaoAsync(int id, int diasParaRenovar);
-        Task DevolverLocacaoAsync(int id);
+        Task<DevolucaoDto> DevolverLocacaoAsync(int id);
         Task<IEnumerable<DevolucaoReportDto>> GetDevolucoesRealizadasReportAsync();
         Task<IEnumerable<LivroMaisLocadoReportDto>> GetLivrosMaisLocadosReportAsync();
         Task<IEnumerable<UsuarioMaisEmprestimosReportDto>> GetUsuariosComMaisEmprestimosReportAsync();

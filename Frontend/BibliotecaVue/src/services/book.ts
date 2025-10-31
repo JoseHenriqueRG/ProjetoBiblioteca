@@ -1,7 +1,7 @@
 import type { LivroDto, CreateLivroDto, UpdateLivroDto } from '@/types';
 import { useAuthStore } from '@/stores/auth';
 
-const BASE_URL = 'https://localhost:44325/api/livros';
+const BASE_URL = '/api/livros';
 
 const getHeaders = () => {
     const authStore = useAuthStore();
@@ -39,7 +39,7 @@ export const createBook = async (bookData: CreateLivroDto): Promise<LivroDto> =>
     return response.json();
 };
 
-export const updateBook = async (id: number, bookData: UpdateLivroDto): Promise<LivroDto> => {
+export const updateBook = async (id: number, bookData: UpdateLivroDto): Promise<void> => {
     const response = await fetch(`${BASE_URL}/${id}`, {
         method: 'PUT',
         headers: getHeaders(),
@@ -48,7 +48,7 @@ export const updateBook = async (id: number, bookData: UpdateLivroDto): Promise<
     if (!response.ok) {
         throw new Error(`Failed to update book with id ${id}`);
     }
-    return response.json();
+    return;
 };
 
 export const searchBooks = async (query: string): Promise<LivroDto[]> => {

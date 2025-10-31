@@ -45,7 +45,7 @@ namespace Biblioteca.WebApi.Controllers
         }
 
         [HttpGet]
-        [Authorize(Policy = "AdminOnly")] // Only administrators can view all rentals
+        [Authorize(Policy = "AdminOnly")] 
         public async Task<ActionResult<IEnumerable<LocacaoDto>>> GetAllLocacoes()
         {
             var locacoes = await _locacaoService.GetAllLocacoesAsync();
@@ -82,8 +82,8 @@ namespace Biblioteca.WebApi.Controllers
         {
             try
             {
-                await _locacaoService.DevolverLocacaoAsync(id);
-                return NoContent();
+                var response = await _locacaoService.DevolverLocacaoAsync(id);
+                return Ok(response);
             }
             catch (KeyNotFoundException ex)
             {

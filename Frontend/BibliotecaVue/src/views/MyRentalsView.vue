@@ -8,6 +8,7 @@
           <th>Data da Retirada</th>
           <th>Data de Devolução</th>
           <th>Status</th>
+          <th>Multa</th>
         </tr>
       </thead>
       <tbody>
@@ -16,6 +17,7 @@
           <td>{{ new Date(rental.dataRetirada).toLocaleDateString() }}</td>
           <td>{{ new Date(rental.dataDevolucaoPrevista).toLocaleDateString() }}</td>
           <td>{{ rental.status }}</td>
+          <td>{{ rental.multa }}</td>
         </tr>
       </tbody>
     </table>

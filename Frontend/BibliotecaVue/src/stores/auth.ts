@@ -2,7 +2,7 @@ import { defineStore } from 'pinia'
 import type { LoginDto, CreateUsuarioDto, UpdateUsuarioDto } from '@/types'
 import { registerUser, updateUser, deleteUser } from '@/services/user';
 
-const BASE_URL = 'https://localhost:44325/api/auth';
+const BASE_URL = '/api/auth';
 
 const userStr = localStorage.getItem('user');
 const user = userStr && userStr !== 'undefined' ? JSON.parse(userStr) : null;

@@ -1,6 +1,7 @@
 using Biblioteca.ApplicationCore.Dtos;
 using Biblioteca.ApplicationCore.Interfaces;
 using Biblioteca.Domain.Models;
+using Microsoft.AspNetCore.Identity;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -106,6 +107,15 @@ namespace Biblioteca.ApplicationCore.Services
             livro.Quantidade = updateLivroDto.Quantidade;
 
             await _livroRepository.UpdateAsync(livro);
+        }
+
+        public async Task DeleteAsync(int id)
+        {
+            var livro = await _livroRepository.GetByIdAsync(id);
+            if (livro != null)
+            {
+                await _livroRepository.DeleteAsync(livro);
+            }
         }
     }
 }

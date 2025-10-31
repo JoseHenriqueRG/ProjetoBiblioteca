@@ -2,7 +2,7 @@
   <div class="container mt-5">
     <div class="d-flex justify-content-between align-items-center mb-4">
       <h1>Gerenciamento de Livros</h1>
-      <RouterLink to="/books/add" class="btn btn-primary">Cadastrar Livro</RouterLink>
+      <RouterLink v-if="isAdmin" to="/books/add" class="btn btn-primary">Cadastrar Livro</RouterLink>
     </div>
 
     <div class="mb-3">
@@ -36,8 +36,8 @@
           <td>{{ livro.isbn }}</td>
           <td>{{ livro.quantidade }}</td>
           <td>
-            <RouterLink :to="`/books/edit/${livro.id}`" class="btn btn-sm btn-warning me-2">Editar</RouterLink>
-            <button @click="deleteLivro(livro.id)" class="btn btn-sm btn-danger">Excluir</button>
+            <RouterLink v-if="isAdmin" :to="`/books/edit/${livro.id}`" class="btn btn-sm btn-warning me-2">Editar</RouterLink>
+            <button v-if="isAdmin" @click="deleteLivro(livro.id)" class="btn btn-sm btn-danger">Excluir</button>
           </td>
         </tr>
       </tbody>
@@ -48,6 +48,7 @@
 <script lang="ts">
 import { defineComponent, ref, onMounted } from 'vue';
 import { getLivros, searchBooks, deleteBook } from '@/services/book';
+import { useAuthStore } from '@/stores/auth';
 import type { LivroDto } from '@/types';
 
 export default defineComponent({
@@ -55,7 +56,8 @@ export default defineComponent({
   setup() {
     const livros = ref<LivroDto[]>([]);
     const searchQuery = ref('');
-
+    const { isAdmin } = useAuthStore();
+    
     const fetchLivros = async () => {
       try {
         livros.value = await getLivros();
@@ -93,6 +95,7 @@ export default defineComponent({
     return {
       livros,
       searchQuery,
+      isAdmin,
       handleSearch,
       deleteLivro,
     };

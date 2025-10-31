@@ -1,5 +1,6 @@
 using Biblioteca.ApplicationCore.Dtos;
 using Biblioteca.ApplicationCore.Interfaces;
+using Biblioteca.ApplicationCore.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
@@ -45,7 +46,7 @@ namespace Biblioteca.WebApi.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "Administrador")]
+        [Authorize(Policy = "AdminOnly")]
         public async Task<ActionResult<LivroDto>> PostLivro(CreateLivroDto createLivroDto)
         {
             var novoLivro = await _livroService.AddAsync(createLivroDto);
@@ -53,10 +54,18 @@ namespace Biblioteca.WebApi.Controllers
         }
 
         [HttpPut("{id}")]
-        [Authorize(Roles = "Administrador")]
+        [Authorize(Policy = "AdminOnly")]
         public async Task<IActionResult> PutLivro(int id, UpdateLivroDto updateLivroDto)
         {
             await _livroService.UpdateAsync(id, updateLivroDto);
+            return NoContent();
+        }
+
+        [HttpDelete("{id}")]
+        [Authorize(Policy = "AdminOnly")]
+        public async Task<IActionResult> DeleteLivro(int id)
+        {
+            await _livroService.DeleteAsync(id);
             return NoContent();
         }
     }

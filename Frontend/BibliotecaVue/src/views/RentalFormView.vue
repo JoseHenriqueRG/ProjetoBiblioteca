@@ -76,9 +76,9 @@ export default defineComponent({
       try {
         await createLocacao(rentalData);
         router.push('/rentals');
-      } catch (error) {
+      } catch (error: any) {
         console.error(error);
-        alert('Erro ao criar locação.');
+        alert(`Erro ao criar locação: ${error.message}`);
       }
     };
 

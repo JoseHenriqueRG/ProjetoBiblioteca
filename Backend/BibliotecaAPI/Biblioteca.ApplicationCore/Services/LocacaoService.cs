@@ -66,7 +66,7 @@ namespace Biblioteca.ApplicationCore.Services
             };
         }
 
-        public async Task DevolverLocacaoAsync(int id)
+        public async Task<DevolucaoDto> DevolverLocacaoAsync(int id)
         {
             var locacao = await _locacaoRepository.GetByIdAsync(id);
             if (locacao == null)
@@ -98,6 +98,8 @@ namespace Biblioteca.ApplicationCore.Services
             }
 
             await _locacaoRepository.UpdateAsync(locacao);
+
+            return new DevolucaoDto() { Multa = locacao.Multa };
         }
 
         public async Task<IEnumerable<LocacaoDto>> GetAllLocacoesAsync()
@@ -132,6 +134,7 @@ namespace Biblioteca.ApplicationCore.Services
                 DataRetirada = locacao.DataRetirada,
                 DataDevolucaoPrevista = locacao.DataDevolucaoPrevista,
                 DataDevolucaoReal = locacao.DataDevolucaoReal,
+                Multa = locacao.Multa,
                 Status = locacao.Status.ToString()
             };
         }
@@ -149,6 +152,7 @@ namespace Biblioteca.ApplicationCore.Services
                 DataRetirada = l.DataRetirada,
                 DataDevolucaoPrevista = l.DataDevolucaoPrevista,
                 DataDevolucaoReal = l.DataDevolucaoReal,
+                Multa = l.Multa,
                 Status = l.Status.ToString()
             });
         }

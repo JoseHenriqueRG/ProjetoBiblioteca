@@ -13,6 +13,7 @@ namespace Biblioteca.ApplicationCore.Dtos
         public DateTimeOffset DataRetirada { get; set; }
         public DateTimeOffset DataDevolucaoPrevista { get; set; }
         public DateTimeOffset? DataDevolucaoReal { get; set; }
-        public string Status { get; set; }
+        public decimal? Multa { get; set; }
+        public string Status { get; set; } = string.Empty;
     }
 }

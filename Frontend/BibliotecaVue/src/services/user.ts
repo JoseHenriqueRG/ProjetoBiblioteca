@@ -1,7 +1,7 @@
 import type { User, CreateUsuarioDto, UpdateUsuarioDto } from '@/types';
 import { useAuthStore } from '@/stores/auth';
 
-const BASE_URL = 'https://localhost:44325/api/usuarios';
+const BASE_URL = '/api/usuarios';
 
 const getHeaders = () => {
     const authStore = useAuthStore();
@@ -23,7 +23,7 @@ export const registerUser = async (userData: CreateUsuarioDto): Promise<User> =>
     const response = await fetch(BASE_URL, {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json',
+            'Content-Type': 'application/json'
         },
         body: JSON.stringify(userData),
     });

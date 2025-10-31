@@ -35,6 +35,7 @@ export interface LocacaoDto {
     dataRetirada: string;
     dataDevolucaoPrevista: string;
     dataDevolucaoReal?: string;
+    multa: number;
     status: 'Pendente' | 'Devolvido';
 }
 
@@ -71,4 +72,8 @@ export interface UpdateLivroDto {
     anoPublicacao: number | null;
     isbn: string;
     quantidade: number | null;
+}
+
+export interface DevolucaoDto {
+    multa: number;
 }

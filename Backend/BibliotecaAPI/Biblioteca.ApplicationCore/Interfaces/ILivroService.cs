@@ -11,5 +11,6 @@ namespace Biblioteca.ApplicationCore.Interfaces
         Task<LivroDto> AddAsync(CreateLivroDto createLivroDto);
         Task UpdateAsync(int id, UpdateLivroDto updateLivroDto);
         Task<IEnumerable<LivroDto>> SearchAsync(string query);
+        Task DeleteAsync(int id);
     }
 }

@@ -64,19 +64,16 @@ builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<ILocacaoRepository, LocacaoRepository>();
 builder.Services.AddScoped<ILocacaoService, LocacaoService>();
 
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("AllowVueApp",
-        builder =>
-        {
-            builder.AllowAnyOrigin()
-                   .AllowAnyHeader()
-                   .AllowAnyMethod();
-            //builder.WithOrigins("http://localhost:5173")
-            //       .AllowAnyHeader()
-            //       .AllowAnyMethod();
-        });
-});
+//builder.Services.AddCors(options =>
+//{
+//    options.AddPolicy("AllowVueApp",
+//        builder =>
+//        {
+//            builder.AllowAnyOrigin()
+//                   .AllowAnyHeader()
+//                   .AllowAnyMethod();
+//        });
+//});
 
 builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
@@ -141,7 +138,7 @@ if (app.Environment.IsDevelopment())
 
 // app.UseHttpsRedirection();
 
-app.UseCors("AllowVueApp");
+//app.UseCors("AllowVueApp");
 
 app.UseAuthentication();
 app.UseAuthorization();
